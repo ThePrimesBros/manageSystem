@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+{{ parent() }}
+<div class="d-flex justify-content-center align-items-center w-75 mx-auto">
+<div class="card m-3 text-white bg-dark w-100">
+<div class='card-header bg-secondary'> <h1>Création d'un post</h1></div>
+  <div class="card-body d-flex justify-content-center w-75 mx-auto">
+  
+{{ form_start(formArtiste, {'attr': {'class': 'w-75 mx-auto'}}) }}
+<div class="form-group ">
+{{ form_row(formArtiste.nom, {'attr': {'placeholder': "Nom du compte", 'class': 'form-control w-100 mt-2 mx-auto'}, 'label_attr': {'class':'font-weight mt-3'}}) }}
+</div>
+<div class="form-group ">
+{{ form_row(formArtiste.nameFacebook, {'attr': {'placeholder': "Pseudo facebook", 'class': 'form-control w-100 mt-2'}, 'label_attr': {'class':'font-weight mt-3'}}) }}
+</div>
+<div class="form-group ">
+{{ form_row(formArtiste.nameTwitter, {'attr': {'placeholder': "Pseudo twitter", 'class': 'form-control w-100 mt-2'}, 'label_attr': {'class':'font-weight mt-3'}}) }}
+</div>
+<div class="form-group ">
+{{ form_row(formArtiste.nameInsta, {'attr': {'placeholder': "Pseudo insta", 'class': 'form-control w-100 mt-2'}, 'label_attr': {'class':'font-weight mt-3'}}) }}
+</div>
+<button type="submit" class="btn btn-primary mt-4 w-50 mx-auto">
+Ajouter l'artiste à la base de données
+</button>
+{{ form_end(formArtiste) }}
+    </div>
+  </div>
+</div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal" id="artisteModal" tabindex="-1" aria-labelledby="twitterModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="twitterModalLabel">Artiste account</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <input autocomplete="off" type="text" id="testinput" placeholder="Type 'a'">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary save">Save changes</button>
+      </div>
+      
+    </div>
+  </div>
+</div>
+<div class="card m-5 text-white bg-dark">
+    <div class='card-header bg-secondary'>
+        <h1 class="h3 mb-3 font-weight-normal text-center">Gestions des tags</h1>
+    </div>
+    <div class="card-body text-white">
+        <div class="table-responsive">
+        <table class="table text-white">
+            <thead>
+                <tr>
+                    <th scope="col">Nom</th>
+                    <th scope="col">Facebook Account</th>
+                    <th scope="col">Twitter Account</th>
+                    <th scope="col">Insta Account</th>
+                    <th scope="col"></th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            {% for account in accounts %}
+            
+            {% if account.nom != '' %}
+                <tr>
+                    <form method="post" action="{{ path('artiste.edit', {id: account.id}) }}" class="bg-dark">
+                    <td class="form-group"><input class="form-control" type='text' value="{{ account.nom }}" name="nom{{account.id}}"></input></td>
+                    
+                <td class="form-group"><input class="form-control" type='text' value="{{account.nameFacebook}}" name="nameFacebook{{account.id}}">
+                </td>
+                <td class="form-group"><input class="form-control" type='text' value="{{account.nameTwitter}}" name="nameTwitter{{account.id}}">
+                </td>
+                    <td class="form-group"><input class="form-control" type='text' value="{{account.nameInsta}}" name="nameInsta{{account.id}}">
+                </td>
+                
+                </input></td><td><button type="submit" class="btn btn-success">
+                        <input type="hidden" name="_method" value="POST">
+                        <input type="hidden" name="_token" value="{{ csrf_token('edit' ~ account.id) }}">
+                        <i class="fa fa-thumbs-up"></i></button></td>
+                </form>
+
+
+                <form method="post" action="{{ path('artiste.del', {id: account.id}) }}" onsubmit="return confirm('Êtes-vous vraiment sûr(e)?')">
+                    <td><button type="submit" class="btn btn-danger">
+                            <i class="fa fa-trash"></i>
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ account.id) }}"></button>
+                    </td>
+                </form>
+                </tr>{% endif %}{% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
